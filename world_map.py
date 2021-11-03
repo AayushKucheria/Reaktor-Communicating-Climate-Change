@@ -4,6 +4,10 @@ import pandas as pd
 import folium
 
 
+# Setting page config
+st.set_page_config(page_title="World Map", page_icon="🌍", layout="wide")
+
+# CONSTANTS
 # years for the slider
 start_year = 1950
 end_year = 2019
