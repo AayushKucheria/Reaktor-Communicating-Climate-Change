@@ -106,12 +106,7 @@ def change_plot(df, year):
   )
 
   fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
-  # fig.update_layout(
-  #     hoverlabel=dict(
-  #         bgcolor="white",
-  #         font_size=16,
-  #         font_family="Rockwell"
-  #     ))
+
   return(fig)
 
 
