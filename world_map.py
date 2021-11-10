@@ -8,12 +8,19 @@ import plotly.express as px
 
 # Function definitions
 
+@st.cache()
+def download_raw_data():
+  url = 'http://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv'
+  df = pd.read_csv(url)
+  return(df)
+
+
+
 # Cached function for downloading/prepping data
 @st.cache(hash_funcs={tuple: lambda x: 1})   # This hashing function is just so that the program doesn't stop. I don't know how it should be.
 def load_data(start_year, end_year):
 
-  url = 'http://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv'
-  df = pd.read_csv(url)
+  df = download_raw_data()
 
   country_geo = 'world-countries.json'
 
@@ -106,9 +113,21 @@ def change_plot(df, year):
   )
 
   fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
-
   return(fig)
 
+@st.cache()
+def world_co2_emissions(from_year):
+  df = download_raw_data()
+  dfw = df[df["country"] == "World"]
+  df3 = dfw[dfw.year >= from_year]
+  fig = px.line(
+    df3, 
+    x = "year", 
+    y = ["co2", "methane"],
+    title = "Global CO2 and methane emissions history"
+  )
+  fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
+  return(fig)
 
 
 
@@ -192,6 +211,8 @@ if page == "Home":
   end_year = 2019
   country_geo, df = load_data(start_year, end_year)
 
+  fig = world_co2_emissions(from_year = 1850)
+  st.plotly_chart(fig)
 
   co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df)
 
