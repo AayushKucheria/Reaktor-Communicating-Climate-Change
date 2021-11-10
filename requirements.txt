@@ -2,3 +2,4 @@ streamlit==1.1
 streamlit_folium
 pandas
 folium
+plotly
