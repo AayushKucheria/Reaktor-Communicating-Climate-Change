@@ -129,7 +129,18 @@ def world_co2_emissions(from_year):
   fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
   return(fig)
 
-
+@st.cache()
+def world_temperature():
+  df_temp = pd.read_csv("globalTemperature.csv", header=1)
+  temperatureLine = (df_temp[df_temp.Year <= 1900][['Temperature']].mean() + 1.5)[0]
+  fig = px.line(
+      df_temp,
+      x = "Year",
+      y = "Temperature",
+      title = "Global mean temperature history",
+  )
+  fig.add_hline(y = temperatureLine, line_color = "red")
+  return(fig)
 
 
 #######################################
@@ -170,13 +181,16 @@ if page == "Home":
   """)
 
   st.subheader("The temperature is rising")
-  # Add template_image.png to the page
-  st.image("template_image.png", width=500)
+  # Figure of worldwide mean temperature over time
+  st.plotly_chart(world_temperature())
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  Tortor dignissim convallis aenean et tortor at risus viverra. Risus nullam eget felis eget nunc lobortis mattis.
-  Integer malesuada nunc vel risus commodo. Lacus viverra vitae congue eu consequat ac felis donec et.
-  Sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec. Urna et pharetra pharetra massa.
+  Human-induced global warming reached about 1°C (likely between 0.8 and 1.2°C) above pre-indstrial levels in 2017, with a 0.2°C increase per decade.
+  Most land regions are warming up faster than the global average - depending on the considered temperature dataset, 20-40% of the world population 
+  live in regions that had already experienced warming of more than 1.5°C in at least one season by the decade 2006-2015.
+
+  The red line in the figure above represents a 1.5°C increase from pre-industrial levels. Global warming is defined in the IPCC report as an increase
+  in combined surface air and sea surface temperatures averaged over the globe and a 30-year period, usually relative to the period 1850-1900.
+  By that measure, warming from pre-industrial levels to the decade 2006-2015 is assessed to be approximately 0.87°C.
   """)
 
   st.subheader("Here's why it matters")
