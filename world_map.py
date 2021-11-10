@@ -205,14 +205,14 @@ if page == "Home":
   """)
 
 
+  fig = world_co2_emissions(from_year = 1850)
+  st.plotly_chart(fig)
+
   # Load data
   # years in data set and in the slider
   start_year = 1950
   end_year = 2019
   country_geo, df = load_data(start_year, end_year)
-
-  fig = world_co2_emissions(from_year = 1850)
-  st.plotly_chart(fig)
 
   co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df)
 
