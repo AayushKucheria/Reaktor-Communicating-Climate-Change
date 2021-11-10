@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_folium import folium_static
 import pandas as pd
 import folium
+import plotly.express as px
 
 
 
@@ -16,7 +17,8 @@ def load_data(start_year, end_year):
 
   country_geo = 'world-countries.json'
 
-  df_map = df[["year", "country", "co2", "co2_per_capita", "co2_growth_prct", "methane"]]
+  df_map = df[["year", "country", "co2", "co2_per_capita", "co2_growth_prct", "methane", "gdp", "population"]]
+  df_map["gdp_per_capita"] = df_map["gdp"] / df_map["population"]
   # df_map = df_map[df_map.year == 2019]
 
   # Change country names so that folium understands them
@@ -90,6 +92,29 @@ def heatmap(country_geo, df_map):
 
   return((co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth))
 
+# This caching does not seem to be changing much
+@st.cache()
+def change_plot(df, year):
+  df = df[df.year == year]
+  fig = px.scatter(
+    df, 
+    x = "co2_growth_prct", 
+    y = "co2", color = "gdp_per_capita",  
+    hover_name = "country", 
+    log_y = True, 
+    hover_data = {"co2_growth_prct":False, "co2":False, "gdp_per_capita": False}
+  )
+
+  fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
+  # fig.update_layout(
+  #     hoverlabel=dict(
+  #         bgcolor="white",
+  #         font_size=16,
+  #         font_family="Rockwell"
+  #     ))
+  return(fig)
+
+
 
 
 
@@ -105,6 +130,7 @@ st.set_page_config(page_title="Climate Change: A Nordic Perspective", page_icon=
 # Create a sidebar with 3 pages
 st.sidebar.header("Menu")
 page = st.sidebar.radio("Pages", ("Home", "About"))
+
 
 # Write some text
 if page == "Home":
@@ -165,15 +191,14 @@ if page == "Home":
   """)
 
 
-
-
-  # CONSTANTS
-  # years for the slider
+  # Load data
+  # years in data set and in the slider
   start_year = 1950
   end_year = 2019
-  
-  country_geo, df_map = load_data(start_year, end_year)
-  co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df_map)
+  country_geo, df = load_data(start_year, end_year)
+
+
+  co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df)
 
 
   # Setup a folium map at a high-level zoom
@@ -192,6 +217,11 @@ if page == "Home":
   folium.LayerControl().add_to(map)
 
   folium_static(map)
+
+
+
+  fig = change_plot(df, year_slider)
+  st.plotly_chart(fig)
 
   st.write("""
   Dictumst quisque sagittis purus sit amet volutpat. Consequat interdum varius sit amet mattis vulputate enim nulla. 
