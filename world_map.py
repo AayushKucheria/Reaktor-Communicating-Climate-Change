@@ -3,6 +3,7 @@ from streamlit_folium import folium_static
 import pandas as pd
 import folium
 import plotly.express as px
+import time
 
 
 
@@ -101,14 +102,15 @@ def heatmap(country_geo, df_map):
 
 # This caching does not seem to be changing much
 @st.cache()
-def change_plot(df, year):
+def changes_plot(df, year, rangeX):
   df = df[df.year == year]
   fig = px.scatter(
     df, 
     x = "co2_growth_prct", 
     y = "co2", color = "gdp_per_capita",  
     hover_name = "country", 
-    log_y = True, 
+    log_y = True,
+    range_x=rangeX,
     hover_data = {"co2_growth_prct":False, "co2":False, "gdp_per_capita": False}
   )
 
@@ -250,8 +252,28 @@ if page == "Home":
 
 
 
-  fig = change_plot(df, year_slider)
-  st.plotly_chart(fig)
+  # Scatter plot of changes in CO2 emissions
+
+  # Element placeholders
+  slider_ph = st.empty()
+  animate = st.button('animate')
+  plot_ph = st.empty()
+
+  year_scatter = slider_ph.slider("Year", start_year, end_year, end_year, 1, key = 1)
+  fig = changes_plot(df, year_scatter, rangeX = None)
+  plot_ph.plotly_chart(fig)
+  
+  if animate:
+      for x in range(year_scatter, end_year, 1):
+          time.sleep(.5)
+
+          year_scatter = slider_ph.slider("Year", start_year, end_year, year_scatter + 1, 1, key = str(year_scatter) + "animation")
+          fig = changes_plot(df, year_scatter, rangeX = [-100, 100])
+          plot_ph.plotly_chart(fig)
+
+
+
+
 
   st.write("""
   Dictumst quisque sagittis purus sit amet volutpat. Consequat interdum varius sit amet mattis vulputate enim nulla. 
