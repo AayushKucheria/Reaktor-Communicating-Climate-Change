@@ -197,18 +197,24 @@ if page == "Home":
 
   st.subheader("Here's why it matters")
   # Add template_image.png to the page
-  st.image("template_image.png", width=500)
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Tortor dignissim convallis aenean et tortor at risus viverra. Risus nullam eget felis eget nunc lobortis mattis. 
-  Integer malesuada nunc vel risus commodo. Lacus viverra vitae congue eu consequat ac felis donec et. 
-  Sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec. Urna et pharetra pharetra massa. 
-  Tellus in metus vulputate eu scelerisque. Aenean euismod elementum nisi quis eleifend quam. 
-  Tristique senectus et netus et malesuada fames ac. Quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis. 
-  Dictum fusce ut placerat orci nulla pellentesque. Vulputate enim nulla aliquet porttitor lacus luctus. Eu volutpat odio facilisis mauris sit amet. 
-  Cursus sit amet dictum sit amet justo donec. 
-  Tempus iaculis urna id volutpat lacus. Ornare massa eget egestas purus viverra accumsan in nisl. Donec et odio pellentesque diam volutpat.
+  Currently, climate change has most significantly impacted natural systems. 
+  This includes situations such as melting ice, changing precipitation, which affect water resource quality and quantity.
+  It has also caused terrestrial, freshwater, and marine species to alter their habits.
   """)
+  st.write("""
+  The consequences of emission rise follow a snowball effect. That is, it exhibits a positive feedback loop that severely magnifies the consequences over time. 
+  Some of these include negative effects on human health (especially so for marginalized communities), economic inequality, 
+  impact from extreme events such as heat waves, droughts, cyclones, etc. 
+  """)
+
+  st.write("""
+  Some second-order consequences of these events are disruption of food production and water supply, 
+  alteration of ecosystems, violent conflict, etc. 
+  These are further intensified due to our lack of preparedness regarding them.
+  """)
+  st.image("https://firebasestorage.googleapis.com/v0/b/firescript-577a2.appspot.com/o/imgs%2Fapp%2Faayush%2Fr8XOhzwE_m.png?alt=media&token=3a757954-5455-42ee-a18e-73fdd6d53afb", caption="AR5 Climate Change 2014: Impacts, Adaptation, and Vulnerability — IPCC", width=500)
+
 
   # Cumulative Emissions: Time Series
   st.subheader("Emissions Worldwide have been growing")
