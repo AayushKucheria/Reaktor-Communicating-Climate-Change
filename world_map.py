@@ -220,10 +220,7 @@ if page == "Home":
   st.subheader("Emissions Worldwide have been growing")
   # Write a paragraph with template text
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  Tortor dignissim convallis aenean et tortor at risus viverra. Risus nullam eget felis eget nunc lobortis mattis.
-  Integer malesuada nunc vel risus commodo. Lacus viverra vitae congue eu consequat ac felis donec et.
-  Sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec. Urna et pharetra pharetra massa.
+  Ever since the industrial revolution.
   """)
 
 
