@@ -134,14 +134,20 @@ def world_co2_emissions(from_year):
 @st.cache()
 def world_temperature():
   df_temp = pd.read_csv("globalTemperature.csv", header=1)
-  temperatureLine = (df_temp[df_temp.Year <= 1900][['Temperature']].mean() + 1.5)[0]
+  df_temp["30 year average"] = df_temp.rolling(window=30)["Temperature"].mean()
+  # preindustrialTemp = (df_temp[df_temp.Year <= 1900][['Temperature']].mean())[0]
+  preindustrialTemp = df_temp.loc[df_temp.Year == 2017, '30 year average'].values[0] - 1
+  df_temp["1 degree increase"] = preindustrialTemp + 1
+  df_temp["1.5 degree increase"] = preindustrialTemp + 1.5
   fig = px.line(
       df_temp,
       x = "Year",
-      y = "Temperature",
+      y = ["Temperature", "30 year average", "1 degree increase", "1.5 degree increase"],
       title = "Global mean temperature history",
+      range_y = (-0.8, 1.8),
   )
-  fig.add_hline(y = temperatureLine, line_color = "red")
+  # fig.add_hline(y = preindustrialTemp + 1, line_color = "orange")
+  # fig.add_hline(y = preindustrialTemp + 1.5, line_color = "red")
   return(fig)
 
 
@@ -190,7 +196,8 @@ if page == "Home":
   Most land regions are warming up faster than the global average - depending on the considered temperature dataset, 20-40% of the world population 
   live in regions that had already experienced warming of more than 1.5°C in at least one season by the decade 2006-2015.
 
-  The red line in the figure above represents a 1.5°C increase from pre-industrial levels. Global warming is defined in the IPCC report as an increase
+  The straight lines in the figure above represent a 1°C and 1.5°C increase from pre-industrial levels, respectively. 
+  Global warming is defined in the IPCC report as an increase
   in combined surface air and sea surface temperatures averaged over the globe and a 30-year period, usually relative to the period 1850-1900.
   By that measure, warming from pre-industrial levels to the decade 2006-2015 is assessed to be approximately 0.87°C.
   """)
