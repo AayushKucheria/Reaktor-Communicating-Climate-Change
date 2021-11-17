@@ -220,7 +220,7 @@ if page == "Home":
   st.subheader("Emissions Worldwide have been growing")
   # Write a paragraph with template text
   st.write("""
-  Ever since the industrial revolution.
+  Ever since the industrial revolution the greenhouse gas output has been quickly rising.
   """)
 
 
