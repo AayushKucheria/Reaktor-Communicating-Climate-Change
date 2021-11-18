@@ -87,7 +87,7 @@ def heatmap(country_geo, df_map):
               key_on='feature.properties.name',
               fill_color='RdPu', fill_opacity=0.7, line_opacity=0.2,
               legend_name='CO2 emissions in million tonnes (Mt)',
-              nan_fill_color="white",   
+              nan_fill_color="white",
               bins = co2_bins
               )
     co2_choropleth[i].geojson.add_child(folium.features.GeoJsonTooltip(fields=['name'], labels=True))
@@ -288,6 +288,9 @@ if page == "Home":
     folium_static(map, width = 900)
 
 
+
+  st.write("""Below is another way to visualize how the emissions have been changing in each country. 
+  This plot is particularly useful for finding the outliers.""")
 
   # Scatter plot of changes in CO2 emissions
 
