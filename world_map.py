@@ -161,6 +161,9 @@ def world_temperature():
   return(fig)
 
 
+
+
+
 #######################################
 #     PAGE STRUCTURE AND CONTENT      #
 #######################################
@@ -244,11 +247,15 @@ if page == "Home":
   To give a sense of the rate at which CO2 and methane have been emitted, the plot below shows the historical yearly emissions for the whole world.
   """)
 
-
-
-
+  # Plot of the CO2 and methane emissions for the entire world
   fig = world_co2_emissions(from_year = 1850)
   st.plotly_chart(fig)
+
+
+  st.write("""It's clear that CO2 emissions have been increasing for many years. 
+  To get a closer look at which countries contribute most to CO2 emissions take a look at the map below.""")
+
+
 
   # Load data
   # years in data set and in the slider
