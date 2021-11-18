@@ -60,6 +60,7 @@ def load_data(start_year, end_year):
 
 @st.cache(hash_funcs={tuple: lambda x: 1})
 def heatmap(country_geo, df_map):
+
   co2_per_capita_choropleth = {}
   co2_choropleth = {}
   co2_growth_choropleth = {}
@@ -67,13 +68,15 @@ def heatmap(country_geo, df_map):
   # Creating all the choropleth maps for all the years
   # total CO2 emissions and growth percentage are not shown by default, CO2 per capita is
   for i in range(start_year, end_year+1):
-    print(i)
     df_map_year = df_map[df_map.year == i]
+    co2_pc_bins = list(df_map_year["co2_per_capita"].quantile([0, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 0.97, 1]))
     co2_per_capita_choropleth[i] = folium.Choropleth(geo_data=country_geo, data=df_map_year,
               columns=['country', 'co2_per_capita'],
               key_on='feature.properties.name',
               fill_color='Reds', fill_opacity=0.7, line_opacity=0.2,
-              legend_name='CO2 emissions per capita'
+              legend_name='CO2 emissions per capita in tonnes (t)',
+              nan_fill_color="white",
+              bins = co2_pc_bins
               )
     co2_per_capita_choropleth[i].geojson.add_child(folium.features.GeoJsonTooltip(fields=['name'], labels=True))
     co2_per_capita_choropleth[i].layer_name = 'CO2 emissions per capita'
@@ -83,7 +86,8 @@ def heatmap(country_geo, df_map):
               columns=['country', 'co2'],
               key_on='feature.properties.name',
               fill_color='RdPu', fill_opacity=0.7, line_opacity=0.2,
-              legend_name='CO2 emissions',
+              legend_name='CO2 emissions in million tonnes (Mt)',
+              nan_fill_color="white",   
               bins = co2_bins
               )
     co2_choropleth[i].geojson.add_child(folium.features.GeoJsonTooltip(fields=['name'], labels=True))
@@ -93,7 +97,8 @@ def heatmap(country_geo, df_map):
               columns=['country', 'co2_growth_prct'],
               key_on='feature.properties.name',
               fill_color='PuBu', fill_opacity=0.7, line_opacity=0.2,
-              legend_name='CO2 Growth Percentage'
+              legend_name='CO2 Growth Percentage',
+              nan_fill_color="white"
               )
     co2_growth_choropleth[i].geojson.add_child(folium.features.GeoJsonTooltip(fields=['name'], labels=True))
     co2_growth_choropleth[i].layer_name = 'CO2 growth percentage'
@@ -111,7 +116,9 @@ def changes_plot(df, year, rangeX):
     hover_name = "country", 
     log_y = True,
     range_x=rangeX,
-    hover_data = {"co2_growth_prct":False, "co2":False, "gdp_per_capita": False}
+    hover_data = {"co2_growth_prct":False, "co2":False, "gdp_per_capita": False},
+    labels = {"co2": "CO2 output (t)", "co2_growth_prct": "CO2 percentage change", "gdp_per_capita": "GDP per capita"},
+    title = "Annual CO2 output and percentage change in " + str(year)
   )
 
   fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
@@ -121,11 +128,14 @@ def changes_plot(df, year, rangeX):
 def world_co2_emissions(from_year):
   df = download_raw_data()
   dfw = df[df["country"] == "World"]
-  df3 = dfw[dfw.year >= from_year]
+  df3 = dfw[dfw.year >= from_year].copy()
+  df3["co2"] = df3["co2"] / 1000
+  df3["methane"] = df3["methane"] / 1000
   fig = px.line(
     df3, 
     x = "year", 
     y = ["co2", "methane"],
+    labels = {"value": "billion tonnes (Gt) of CO2 equivalent", "variable": "Greenhouse gas"},
     title = "Global CO2 and methane emissions history"
   )
   fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
@@ -221,7 +231,13 @@ if page == "Home":
   # Write a paragraph with template text
   st.write("""
   Ever since the industrial revolution the greenhouse gas output has been quickly rising.
+  The most problmatic of the greenhouse gases is carbon dioxide (CO2) which is emmited in enormous quantities mainly when burning fossil fuels.
+  The other main contributor to global warming is methane (CH4) which is emitted in far smaller amounts, but is much more potent and therefore 
+  accounts for roughly 1/3 of the temperature increase due to the greenhouse effect.
+  To give a sense of the rate at which CO2 and methane have been emitted, the plot below shows the historical yearly emissions for the whole world.
   """)
+
+
 
 
   fig = world_co2_emissions(from_year = 1850)
@@ -233,15 +249,18 @@ if page == "Home":
   end_year = 2019
   country_geo, df = load_data(start_year, end_year)
 
-  co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df)
+  co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df.copy())
 
 
   # Setup a folium map at a high-level zoom
   map = folium.Map(zoom_start=1, tiles='cartodbpositron')
+  # Set aside some space for the map
+  map_space = st.columns((2, 1))
   # slider for selecting the year
   year_slider = st.slider("Year", start_year, end_year, end_year)
   # radio buttons for selecting what to show
-  layer_radio = st.radio("Quantity", ('CO2 per capita', 'total CO2 emissions', 'CO2 growth percentage'))
+  with map_space[1]:
+    layer_radio = st.radio("Quantity", ('CO2 per capita', 'total CO2 emissions', 'CO2 growth percentage'))
   if layer_radio == 'CO2 per capita':
     co2_per_capita_choropleth[year_slider].add_to(map)
   elif layer_radio == 'total CO2 emissions':
@@ -251,18 +270,20 @@ if page == "Home":
 
   folium.LayerControl().add_to(map)
 
-  folium_static(map)
+  with map_space[0]:
+    folium_static(map, width = 900)
 
 
 
   # Scatter plot of changes in CO2 emissions
 
   # Element placeholders
+
+  plot_ph = st.empty()
   slider_ph = st.empty()
   animate = st.button('animate')
-  plot_ph = st.empty()
 
-  year_scatter = slider_ph.slider("Year", start_year, end_year, end_year, 1, key = 1)
+  year_scatter = slider_ph.slider("Year", start_year, end_year, end_year - 1, 1, key = 1)
   fig = changes_plot(df, year_scatter, rangeX = None)
   plot_ph.plotly_chart(fig)
   
@@ -346,3 +367,45 @@ elif page == "About":
   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
   Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   """)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################################################
+#  CODE EXAMPLES
+################
+
+# How to store some information in Streamlit if Streamplit changes it back to default when you don't want.
+# For example if a button has been pressed.
+
+# # Keep the state of the button press between actions
+# @st.cache(allow_output_mutation=True)
+# def button_states():
+#     return {"pressed": None}
+
+# press_button = st.button("Press it Now!")
+# is_pressed = button_states()  # gets our cached dictionary
+
+# if press_button:
+#     # any changes need to be performed in place
+#     is_pressed.update({"pressed": True})
+
+# if is_pressed["pressed"]:  # saved between sessions
+#     th = st.number_input("Please enter the values from 0 - 10")
