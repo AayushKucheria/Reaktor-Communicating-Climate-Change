@@ -342,7 +342,7 @@ if page == "Home":
   # Load data
   # years in data set and in the slider
   start_year = 1950
-  end_year = max_year()
+  end_year = int(max_year())
   country_geo, df = load_data(start_year, end_year)
 
   co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df.copy())
@@ -394,7 +394,7 @@ if page == "Home":
     slider_ph = st.empty()
     animate = st.button('animate')
 
-  year_scatter = slider_ph.slider("Year", start_year, end_year, end_year - 1, 1, key = 1)
+  year_scatter = slider_ph.slider("Year", start_year, end_year, end_year - 2, 1, key = 1)
   fig = changes_plot(df, year_scatter, rangeX = None)
   plot_ph.plotly_chart(fig)
   
