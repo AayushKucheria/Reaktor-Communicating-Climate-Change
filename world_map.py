@@ -4,6 +4,7 @@ import pandas as pd
 import folium
 import plotly.express as px
 import time
+from sklearn.linear_model import LinearRegression
 
 
 
@@ -124,19 +125,79 @@ def changes_plot(df, year, rangeX):
   fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
   return(fig)
 
-@st.cache()
-def world_co2_emissions(from_year):
+def model_future_CO2_emissions(country, predict_time, train_from):
+  
   df = download_raw_data()
-  dfw = df[df["country"] == "World"]
+  fi = df[df.country == country]
+  fi = fi[["country", "year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
+  fi = fi[df.year > train_from]
+  available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
+  years_cut_off = fi.year.max() - available_data_year
+  shift_by = predict_time + years_cut_off
+  fi["co2_now"] = fi["co2"].shift(-shift_by) # All other variables are from the past
+  fi = fi[df.year < available_data_year]
+  predict_from = available_data_year + 1
+
+  training = fi[fi.year < predict_from - shift_by].copy()
+  test = fi[fi.year >= predict_from - shift_by].copy()
+
+  y_train = training.co2_now
+  X_train = training[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
+  X_test = test[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
+
+  reg = LinearRegression().fit(X_train, y_train)
+  prediction = reg.predict(X_test)
+  result = pd.DataFrame({"year": test.year + shift_by, "prediction": prediction})
+  return(result)
+
+def model_future_methane_emissions(country, predict_time, train_from):
+  
+  df = download_raw_data()
+  fi = df[df.country == country]
+  fi = fi[["country", "year", "co2", "population", "methane"]]
+  fi = fi[df.year > train_from]
+  available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
+  years_cut_off = fi.year.max() - available_data_year
+  shift_by = predict_time + years_cut_off
+  fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
+  fi = fi[df.year < available_data_year]
+  predict_from = available_data_year + 1
+
+  training = fi[fi.year < predict_from - shift_by].copy()
+  test = fi[fi.year >= predict_from - shift_by].copy()
+
+  y_train = training.methane_now
+  X_train = training[["year", "co2", "methane", "population"]]
+  X_test = test[["year", "co2", "methane", "population"]]
+
+  reg = LinearRegression().fit(X_train, y_train)
+  prediction = reg.predict(X_test)
+  result = pd.DataFrame({"year": test.year + shift_by, "prediction": prediction})
+  result.rename({"prediction": "methane prediction"}, axis = 1, inplace = True)
+  return(result)
+
+
+@st.cache()
+def co2_emissions_plot(country, from_year):
+  co2_prediction = model_future_CO2_emissions(country, 5, 1980)
+  methane_prediction = model_future_methane_emissions(country, 5, 2000)
+  df = download_raw_data()
+  dfw = df[df["country"] == country]
   df3 = dfw[dfw.year >= from_year].copy()
-  df3["co2"] = df3["co2"] / 1000
+  df3 = pd.merge(df3, co2_prediction, how = "outer", on=["year"])
+  df3 = pd.merge(df3, methane_prediction, how = "outer", on=["year"])
+  df3.rename({"co2": "CO2", "prediction": "CO2 prediction"}, axis = 1, inplace = True)
+  df3["CO2"] = df3["CO2"] / 1000
   df3["methane"] = df3["methane"] / 1000
+  df3["CO2 prediction"] = df3["CO2 prediction"] / 1000
+  df3["methane prediction"] = df3["methane prediction"] / 1000
+
   fig = px.line(
     df3, 
     x = "year", 
-    y = ["co2", "methane"],
+    y = ["CO2", "CO2 prediction", "methane", "methane prediction"],
     labels = {"value": "billion tonnes (Gt) of CO2 equivalent", "variable": "Greenhouse gas"},
-    title = "Global CO2 and methane emissions history"
+    title = "CO2 and methane emissions history for " + str(country)
   )
   fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
   return(fig)
@@ -248,7 +309,8 @@ if page == "Home":
   """)
 
   # Plot of the CO2 and methane emissions for the entire world
-  fig = world_co2_emissions(from_year = 1850)
+  year_slider_lineplot = st.slider("From year", 1850, 2010, 1850)
+  fig = co2_emissions_plot(country = "Finland", from_year = year_slider_lineplot)
   st.plotly_chart(fig)
 
 
