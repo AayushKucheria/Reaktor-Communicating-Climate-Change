@@ -1,3 +1,4 @@
+from pandas.core.frame import DataFrame
 import streamlit as st
 from streamlit_folium import folium_static
 import pandas as pd
@@ -5,6 +6,7 @@ import folium
 import plotly.express as px
 import time
 from sklearn.linear_model import LinearRegression
+from folium.plugins import Fullscreen
 
 
 
@@ -119,14 +121,16 @@ def changes_plot(df, year, rangeX):
     range_x=rangeX,
     hover_data = {"co2_growth_prct":False, "co2":False, "gdp_per_capita": False},
     labels = {"co2": "CO2 output (t)", "co2_growth_prct": "CO2 percentage change", "gdp_per_capita": "GDP per capita"},
-    title = "Annual CO2 output and percentage change in " + str(year)
+    title = "Annual CO2 output and percentage change in " + str(year), 
+    width = 900,
+    height=600
   )
 
   fig.add_vline(x = 0, line_color = "lime") #line_dash = "dash"
   return(fig)
 
+@st.cache()
 def model_future_CO2_emissions(country, predict_time, train_from):
-  
   df = download_raw_data()
   fi = df[df.country == country]
   fi = fi[["country", "year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
@@ -150,13 +154,15 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   result = pd.DataFrame({"year": test.year + shift_by, "prediction": prediction})
   return(result)
 
+@st.cache()
 def model_future_methane_emissions(country, predict_time, train_from):
-  
   df = download_raw_data()
   fi = df[df.country == country]
   fi = fi[["country", "year", "co2", "population", "methane"]]
   fi = fi[df.year > train_from]
   available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
+  if(pd.isnull(available_data_year)):
+    return(pd.DataFrame({"year":[], "methane prediction": []}))
   years_cut_off = fi.year.max() - available_data_year
   shift_by = predict_time + years_cut_off
   fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
@@ -178,7 +184,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
 
 
 @st.cache()
-def co2_emissions_plot(country, from_year):
+def emissions_history_plot(country, from_year):
   co2_prediction = model_future_CO2_emissions(country, 5, 1980)
   methane_prediction = model_future_methane_emissions(country, 5, 2000)
   df = download_raw_data()
@@ -187,17 +193,15 @@ def co2_emissions_plot(country, from_year):
   df3 = pd.merge(df3, co2_prediction, how = "outer", on=["year"])
   df3 = pd.merge(df3, methane_prediction, how = "outer", on=["year"])
   df3.rename({"co2": "CO2", "prediction": "CO2 prediction"}, axis = 1, inplace = True)
-  df3["CO2"] = df3["CO2"] / 1000
-  df3["methane"] = df3["methane"] / 1000
-  df3["CO2 prediction"] = df3["CO2 prediction"] / 1000
-  df3["methane prediction"] = df3["methane prediction"] / 1000
 
   fig = px.line(
     df3, 
     x = "year", 
     y = ["CO2", "CO2 prediction", "methane", "methane prediction"],
-    labels = {"value": "billion tonnes (Gt) of CO2 equivalent", "variable": "Greenhouse gas"},
-    title = "CO2 and methane emissions history for " + str(country)
+    labels = {"value": "million tonnes (Mt) of CO2 equivalent", "variable": "Greenhouse gas"},
+    title = "CO2 and methane emissions history for " + str(country),
+    width = 900,
+    height = 500
   )
   fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
   return(fig)
@@ -309,9 +313,19 @@ if page == "Home":
   """)
 
   # Plot of the CO2 and methane emissions for the entire world
-  year_slider_lineplot = st.slider("From year", 1850, 2010, 1850)
-  fig = co2_emissions_plot(country = "Finland", from_year = year_slider_lineplot)
-  st.plotly_chart(fig)
+  lineplot_space = st.columns((2, 1))
+  with lineplot_space[1]:
+    st.write("")
+    st.write("")
+    st.write("")  # Just some padding
+    st.write("")
+    st.write("")
+    select_country = st.selectbox("Select region", ["World", "Europe", "Finland", "Sweden", "Norway", "China", "United States"])
+    year_slider_lineplot = st.slider("From year", 1850, 2010, 1850)
+
+  fig = emissions_history_plot(country = select_country, from_year = year_slider_lineplot)
+  with lineplot_space[0]:
+    st.plotly_chart(fig)
 
 
   st.write("""It's clear that CO2 emissions have been increasing for many years. 
@@ -332,10 +346,11 @@ if page == "Home":
   map = folium.Map(zoom_start=1, tiles='cartodbpositron')
   # Set aside some space for the map
   map_space = st.columns((2, 1))
-  # slider for selecting the year
-  year_slider = st.slider("Year", start_year, end_year, end_year)
-  # radio buttons for selecting what to show
+
   with map_space[1]:
+    # slider for selecting the year
+    year_slider = st.slider("Year", start_year, end_year, end_year)
+    # radio buttons for selecting what to show
     layer_radio = st.radio("Quantity", ('CO2 per capita', 'total CO2 emissions', 'CO2 growth percentage'))
   if layer_radio == 'CO2 per capita':
     co2_per_capita_choropleth[year_slider].add_to(map)
@@ -345,6 +360,8 @@ if page == "Home":
     co2_growth_choropleth[year_slider].add_to(map)
 
   folium.LayerControl().add_to(map)
+
+  Fullscreen().add_to(map)
 
   with map_space[0]:
     folium_static(map, width = 900)
@@ -358,9 +375,18 @@ if page == "Home":
 
   # Element placeholders
 
-  plot_ph = st.empty()
-  slider_ph = st.empty()
-  animate = st.button('animate')
+  changes_plot_space = st.columns((2, 1))
+  with changes_plot_space[0]:
+    plot_ph = st.empty()
+  
+  with changes_plot_space[1]:
+    st.write("")
+    st.write("")
+    st.write("")  # Just some padding
+    st.write("")
+    st.write("")
+    slider_ph = st.empty()
+    animate = st.button('animate')
 
   year_scatter = slider_ph.slider("Year", start_year, end_year, end_year - 1, 1, key = 1)
   fig = changes_plot(df, year_scatter, rangeX = None)
