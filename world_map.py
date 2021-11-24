@@ -18,6 +18,12 @@ def download_raw_data():
   df = pd.read_csv(url)
   return(df)
 
+@st.cache()
+def max_year():
+  df = download_raw_data()
+  max_y = df.year.max()
+  return(max_y)
+
 
 
 # Cached function for downloading/prepping data
@@ -336,7 +342,7 @@ if page == "Home":
   # Load data
   # years in data set and in the slider
   start_year = 1950
-  end_year = 2019
+  end_year = max_year()
   country_geo, df = load_data(start_year, end_year)
 
   co2_per_capita_choropleth, co2_choropleth, co2_growth_choropleth = heatmap(country_geo, df.copy())
