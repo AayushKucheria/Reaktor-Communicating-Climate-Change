@@ -210,6 +210,24 @@ def emissions_history_plot(country, from_year):
     height = 500
   )
   fig.add_hline(y = 0, line_color = "black", line_dash = "dash")
+  fig.add_annotation( # add a text callout with arrow
+    text="Paris agreement", x=2016, y=1.05 * int(df3[df3.year == 2016].CO2), arrowhead=1, showarrow=True
+  )
+  fig.add_annotation( # add a text callout with arrow
+    text="Kyoto protocol", x=2005, y=1.05 * int(df3[df3.year == 2005].CO2), arrowhead=1, showarrow=True
+  )
+  fig.add_annotation( # add a text callout with arrow
+    text="WW1", x=1914, y=1.3 * int(df3[df3.year == 1914].CO2), arrowhead=1, showarrow=True
+  )
+  fig.add_annotation( # add a text callout with arrow
+    text="WW2", x=1939, y=1.3 * int(df3[df3.year == 1939].CO2), arrowhead=1,  showarrow=True
+  )
+  fig.add_annotation( # add a text callout with arrow
+    text="Early 1980's recession", x=1980, y=1.05 * int(df3[df3.year == 1980].CO2), arrowhead=1,  showarrow=True, ay = -50
+  )
+  fig.add_annotation( # add a text callout with arrow
+    text="Great depession", x=1930, y=1.3 * int(df3[df3.year == 1930].CO2), arrowhead=1,  showarrow=True, ay = -100
+  )
   return(fig)
 
 @st.cache()
