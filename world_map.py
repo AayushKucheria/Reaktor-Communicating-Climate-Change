@@ -13,14 +13,15 @@ from folium.plugins import Fullscreen
 # Function definitions
 
 @st.cache()
-def download_raw_data():
-  url = 'http://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv'
-  df = pd.read_csv(url)
+def get_OWID_data():
+  #url = 'http://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv'
+  #df = pd.read_csv(url)
+  df = pd.read_csv("owid-co2-data_25_11_2021.csv")
   return(df)
 
 @st.cache()
 def max_year():
-  df = download_raw_data()
+  df = get_OWID_data()
   max_y = df.year.max()
   return(max_y)
 
@@ -30,7 +31,7 @@ def max_year():
 @st.cache(hash_funcs={tuple: lambda x: 1})   # This hashing function is just so that the program doesn't stop. I don't know how it should be.
 def load_data(start_year, end_year):
 
-  df = download_raw_data()
+  df = get_OWID_data()
 
   country_geo = 'world-countries.json'
 
@@ -140,7 +141,7 @@ def changes_plot(df, year, rangeX):
 
 @st.cache()
 def model_future_CO2_emissions(country, predict_time, train_from):
-  df = download_raw_data()
+  df = get_OWID_data()
   fi = df[df.country == country]
   fi = fi[["country", "year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
   fi = fi[df.year > train_from]
@@ -165,7 +166,7 @@ def model_future_CO2_emissions(country, predict_time, train_from):
 
 @st.cache()
 def model_future_methane_emissions(country, predict_time, train_from):
-  df = download_raw_data()
+  df = get_OWID_data()
   fi = df[df.country == country]
   fi = fi[["country", "year", "co2", "population", "methane"]]
   fi = fi[df.year > train_from]
@@ -196,7 +197,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
 def emissions_history_plot(country, from_year):
   co2_prediction = model_future_CO2_emissions(country, 5, 1980)
   methane_prediction = model_future_methane_emissions(country, 5, 2000)
-  df = download_raw_data()
+  df = get_OWID_data()
   dfw = df[df["country"] == country]
   df3 = dfw[dfw.year >= from_year].copy()
   df3 = pd.merge(df3, co2_prediction, how = "outer", on=["year"])
