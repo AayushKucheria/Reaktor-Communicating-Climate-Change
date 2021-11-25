@@ -117,7 +117,10 @@ def heatmap(country_geo, df_map):
 # This caching does not seem to be changing much
 @st.cache()
 def changes_plot(df, year, rangeX):
-  df = df[df.year == year]
+  df = df[df.year == year].copy()
+  if rangeX is not None:
+    df["co2_growth_prct"] = df.co2_growth_prct.clip(rangeX[0] + 1, rangeX[1] - 1)    
+  
   fig = px.scatter(
     df, 
     x = "co2_growth_prct", 
@@ -345,9 +348,8 @@ if page == "Home":
     st.write("")
     st.write("")
     select_country = st.selectbox("Select region", ["World", "Europe", "Finland", "Sweden", "Norway", "China", "United States"])
-    year_slider_lineplot = st.slider("From year", 1850, 2010, 1850)
 
-  fig = emissions_history_plot(country = select_country, from_year = year_slider_lineplot)
+  fig = emissions_history_plot(country = select_country, from_year = 1850)
   with lineplot_space[0]:
     st.plotly_chart(fig)
 
