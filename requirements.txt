@@ -4,3 +4,4 @@ pandas
 folium
 plotly
 sklearn
+statsmodels
