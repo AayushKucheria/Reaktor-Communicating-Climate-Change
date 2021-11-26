@@ -7,6 +7,9 @@ import plotly.express as px
 import time
 from sklearn.linear_model import LinearRegression
 from folium.plugins import Fullscreen
+import statsmodels.api as smapi
+import statsmodels as sm
+import plotly.graph_objs as go
 
 
 
@@ -159,9 +162,11 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   X_train = training[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
   X_test = test[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
 
-  reg = LinearRegression().fit(X_train, y_train)
-  prediction = reg.predict(X_test)
-  result = pd.DataFrame({"year": test.year + shift_by, "prediction": prediction})
+  model = smapi.OLS(y_train,X_train)
+  results = model.fit()
+
+  a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
+  result = pd.DataFrame({"year": test.year + shift_by, "prediction": results.predict(X_test), "lci": lower_confidence, "uci": upper_confidence})
   return(result)
 
 @st.cache()
@@ -172,7 +177,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
   fi = fi[df.year > train_from]
   available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
   if(pd.isnull(available_data_year)):
-    return(pd.DataFrame({"year":[], "methane prediction": []}))
+    return(pd.DataFrame({"year":[], "methane prediction": [], "muci": [], "mlci":[]}))
   years_cut_off = fi.year.max() - available_data_year
   shift_by = predict_time + years_cut_off
   fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
@@ -186,10 +191,11 @@ def model_future_methane_emissions(country, predict_time, train_from):
   X_train = training[["year", "co2", "methane", "population"]]
   X_test = test[["year", "co2", "methane", "population"]]
 
-  reg = LinearRegression().fit(X_train, y_train)
-  prediction = reg.predict(X_test)
-  result = pd.DataFrame({"year": test.year + shift_by, "prediction": prediction})
-  result.rename({"prediction": "methane prediction"}, axis = 1, inplace = True)
+  model = smapi.OLS(y_train,X_train)
+  results = model.fit()
+
+  a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
+  result = pd.DataFrame({"year": test.year + shift_by, "methane prediction": results.predict(X_test), "mlci": lower_confidence, "muci": upper_confidence})
   return(result)
 
 
@@ -230,8 +236,39 @@ def emissions_history_plot(country, from_year):
     text="Early 1980's recession", x=1980, y=1.05 * int(df3[df3.year == 1980].CO2), arrowhead=1,  showarrow=True, ay = -50
   )
   fig.add_annotation( # add a text callout with arrow
-    text="Great depession", x=1930, y=1.3 * int(df3[df3.year == 1930].CO2), arrowhead=1,  showarrow=True, ay = -100
+    text="The Great Depession", x=1930, y=1.3 * int(df3[df3.year == 1930].CO2), arrowhead=1,  showarrow=True, ay = -100
   )
+  fig.add_annotation( # add a text callout with arrow
+    text="COVID pandemic", x=2019, y=0.99 * int(df3[df3.year == 2019].CO2), arrowhead=1,  showarrow=True, ay = 70
+  )
+
+  # Confidence intervals
+  fig.add_trace(go.Scatter(x=df3.year, y = df3.uci,
+    fill=None,
+    mode='lines',
+    line_color="rgba(255, 0, 0, 0)",
+    name = ""
+  ))
+  fig.add_trace(go.Scatter(
+    x=df3.year, y = df3.lci,
+    fill='tonexty', # fill area between trace0 and trace1
+    mode='lines', line_color="rgba(255, 0, 0, 0)", fillcolor="rgba(255, 0, 0, 0.2)",
+    name = "95% confidence inteval for CO2"
+  ))
+  fig.add_trace(go.Scatter(x=df3.year, y = df3.muci,
+    fill=None,
+    mode='lines',
+    line_color="rgba(0, 255, 0, 0)",
+    name = ""
+  ))
+  fig.add_trace(go.Scatter(
+    x=df3.year, y = df3.mlci,
+    fill='tonexty', # fill area between trace0 and trace1
+    mode='lines', line_color="rgba(0, 255, 0, 0)", fillcolor = "rgba(0, 255, 0, 0.2)",
+    name = "95% confidence inteval for methane"
+  ))
+
+
   return(fig)
 
 @st.cache()
