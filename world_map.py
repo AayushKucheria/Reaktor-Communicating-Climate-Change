@@ -165,6 +165,7 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   model = smapi.OLS(y_train,X_train)
   results = model.fit()
 
+  # https://tedboy.github.io/statsmodels_doc/generated/statsmodels.sandbox.regression.predstd.wls_prediction_std.html
   a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
   result = pd.DataFrame({"year": test.year + shift_by, "prediction": results.predict(X_test), "lci": lower_confidence, "uci": upper_confidence})
   return(result)
