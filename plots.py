@@ -95,12 +95,13 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   fi = df[df.country == country]
   fi = fi[["country", "year", "co2", "population", "energy_per_capita"]]
   fi = fi[df.year > train_from]
-  available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
-  years_cut_off = fi.year.max() - available_data_year
+  available_data_year     = fi[~ fi.isnull().any(axis = 1)    ].year.max()
+  available_co2_data_year = fi[~ fi.co2.isnull()].year.max()
+  years_cut_off = available_co2_data_year - available_data_year
   shift_by = predict_time + years_cut_off
   fi["co2_now"] = fi["co2"].shift(-shift_by) # All other variables are from the past
   fi = fi[df.year < available_data_year]
-  predict_from = available_data_year + 1
+  predict_from = available_co2_data_year + 1
 
   training = fi[fi.year < predict_from - shift_by].copy()
   test = fi[fi.year >= predict_from - shift_by].copy()
@@ -126,13 +127,14 @@ def model_future_methane_emissions(country, predict_time, train_from):
   fi = fi[["country", "year", "co2", "population", "methane"]]
   fi = fi[df.year > train_from]
   available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
+  available_methane_data_year = fi[~ fi.methane.isnull()].year.max()
   if(pd.isnull(available_data_year)):
     return(pd.DataFrame({"year":[], "methane prediction": [], "muci": [], "mlci":[]}))
-  years_cut_off = fi.year.max() - available_data_year
+  years_cut_off = available_methane_data_year - available_data_year
   shift_by = predict_time + years_cut_off
   fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
   fi = fi[df.year < available_data_year]
-  predict_from = available_data_year + 1
+  predict_from = available_methane_data_year + 1
 
   training = fi[fi.year < predict_from - shift_by].copy()
   test = fi[fi.year >= predict_from - shift_by].copy()
