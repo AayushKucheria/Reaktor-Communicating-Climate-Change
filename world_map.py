@@ -57,12 +57,13 @@ explicit plan to reduce the use of coal by phasing it down. The pact pledged to 
 cope with both the effects of climate change and the switch to clean energy. 
   """)
 
+  # Copy the above markdown without the links
   st.markdown("""
-  - [The temperature is rising](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#the-temperature-is-rising)
-  - [Here's why it matters](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#heres-why-it-matters)
-  - [Emissions worldwide have been growing](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#emissions-worldwide-have-been-growing)
-  - [But, which sectors actually contribute to this?](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#but-which-sectors-actually-contribute-to-this)
-  - [What can we do about this?](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#what-can-we-do-about-this)
+  - The temperature is rising
+  - Here's why it matters
+  - Emissions worldwide have been growing
+  - But, which sectors actually contribute to this?
+  - What can we do about this?
   """)
 
   st.subheader("The temperature is rising")
