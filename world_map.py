@@ -287,16 +287,25 @@ cope with both the effects of climate change and the switch to clean energy.
 elif page == "About":
   st.title("About")
   st.write("""
-  This website was created as part of the Data Science Project course at Aalto University.
-
-  The goal of the project was to find ways to communicate climate change in a clear and impactful way with an interactive web page.  
-
+  This website was created as part of the Data Science Project course at Aalto University. The goal of the project was to find ways to communicate climate change in a clear and impactful way with an interactive web page.
   The focus was especially on capturing the emission reduction momentum by visualizing greenhouse emissions, in particular CO2, and the 
   explanatory phenomena by first exploring the past and then into the future. 
 
   Contributors: Verna, Hanne, Mikolaj, Aayush, Khue, My.
   """)
 
+st.subheader("Credits")
+
+st.markdown("""
+
+  This data has been collected, aggregated, and documented by Our World in Data into a co2-dataset publicly available on [github](This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser, Edouard Mathieu and Bobbie Macdonald.
+
+  More specifically, Our World in Data has collected the data from the following sources:
+- CO2 emissions: this data is sourced from the Global Carbon Project. The Global Carbon Project typically releases a new update of CO2 emissions annually.
+- Greenhouse gas emissions (including methane, and nitrous oxide): this data is sourced from the CAIT Climate Data Explorer, and downloaded from the Climate Watch Portal.
+- Energy (primary energy, energy mix and energy intensity): this data is sourced from a combination of two sources. The BP Statistical Review of World Energy is published annually, but it does not provide data on primary energy consumption for all countries. For countries absent from this dataset, we calculate primary energy by multiplying the World Bank, World Development Indicators metric Energy use per capita by total population figures. The World Bank sources this metric from the IEA.
+- Other variables: this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.).
+""")
 
 
 
