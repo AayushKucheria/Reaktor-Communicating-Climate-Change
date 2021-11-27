@@ -34,7 +34,7 @@ page = st.sidebar.radio("Pages", ("Home", "About"))
 
 # Write some text
 if page == "Home":
-  st.header("The Climate Crisis. Tick Tock.")
+  st.header("The Climate Crisis")
   st.write("""
 Climate change, mainly due to carbon dioxide (CO2) and methane emissions, is one of the largest challenges that humanity is currently facing. 
 As population and consumption will continue to increase in the future, so will emissions. Meaning the challenge is far from over and will 
@@ -216,17 +216,6 @@ cope with both the effects of climate change and the switch to clean energy.
   """)
 
   template_image = "./res/template_image.png"
-  # Bold text
-  st.markdown("**Expand on Sub-saharan africa, latin america, etc**")
-  # Add template_image
-  st.image(template_image, width=500)
-  st.text("""
-  Ullamcorper velit sed ullamcorper morbi. Elementum facilisis leo vel fringilla est ullamcorper. 
-  Libero id faucibus nisl tincidunt eget nullam non. Suspendisse interdum consectetur libero id faucibus nisl. 
-  Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. 
-  Vitae purus faucibus ornare suspendisse sed nisi lacus. Dui ut ornare lectus sit amet est placerat in egestas. 
-  Interdum velit laoreet id donec ultrices tincidunt arcu non sodales.
-  """)
 
   # Solutions, not just sources
   st.subheader("But, which sectors actually contribute to this?")
