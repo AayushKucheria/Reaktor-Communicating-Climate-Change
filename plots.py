@@ -92,8 +92,8 @@ def changes_plot(df, year, rangeX):
 @st.cache()
 def model_future_CO2_emissions(country, predict_time, train_from):
   df = get_OWID_data()
-  fi = df[df.country == country]
-  fi = fi[["country", "year", "co2", "population", "energy_per_capita"]]
+  df_country = df[df.country == country]
+  fi = df_country[["country", "year", "co2", "population", "energy_per_capita"]]
   fi = fi[df.year > train_from]
   available_data_year     = fi[~ fi.isnull().any(axis = 1)    ].year.max()
   available_co2_data_year = fi[~ fi.co2.isnull()].year.max()
@@ -113,9 +113,19 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   model = smapi.OLS(y_train,X_train)
   results = model.fit()
 
+  # The last recorded value will be prepended so that there are no gaps in the plot
+  last_recorded_value = pd.Series([df_country[df_country.year == available_co2_data_year].co2.values[0]])
+  prediction = results.predict(X_test)
+  prediction = pd.concat([last_recorded_value.copy(), prediction]).reset_index(drop = True)
+  prediction_years = test.year + shift_by
+  prediction_years = pd.concat([pd.Series([available_co2_data_year]), prediction_years]).reset_index(drop = True)
+
   # https://tedboy.github.io/statsmodels_doc/generated/statsmodels.sandbox.regression.predstd.wls_prediction_std.html
   a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
-  result = pd.DataFrame({"year": test.year + shift_by, "prediction": results.predict(X_test), "lci": lower_confidence, "uci": upper_confidence})
+  lower_confidence = pd.concat([last_recorded_value.copy(), pd.Series(lower_confidence)]).reset_index(drop = True)
+  upper_confidence = pd.concat([last_recorded_value.copy(), pd.Series(upper_confidence)]).reset_index(drop = True)
+  result = pd.DataFrame({"year": prediction_years, "prediction": prediction, "lci": lower_confidence, "uci": upper_confidence})
+
   return(result)
 
 
@@ -134,7 +144,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
   shift_by = predict_time + years_cut_off
   fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
   fi = fi[df.year < available_data_year]
-  predict_from = available_methane_data_year + 1
+  predict_from = available_methane_data_year + 1  
 
   training = fi[fi.year < predict_from - shift_by].copy()
   test = fi[fi.year >= predict_from - shift_by].copy()
