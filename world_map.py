@@ -246,30 +246,39 @@ cope with both the effects of climate change and the switch to clean energy.
   """)
 
   st.subheader("What can we do about this?")
+  
+  st.write("""
+  There are various ways to reduce global warming - we can replace high-emitting fuels such as coal, oil and gas with more climate-friendly 
+  alternatives like solar power, wind power, or nuclear power. We can also work on making our buildings, technology and infrastructure more 
+  energy-efficient, both in production and in usage. 
+
+  Another approach is to try to remove CO2 that is already in the atmosphere, for example by reforesting the earth – tropical forests once 
+  covered 12% of the earth’s landmass, now they only cover 5% -, by changing farming practices to store more carbon in the soil or through 
+  direct air capture technology. However, it is unlikely that these methods will be able to remove carbon dioxide faster than it is currently 
+  being produced. 
+  """)
 
   st.markdown("**As Individuals**")
-  st.text("""
-  Ullamcorper velit sed ullamcorper morbi. Elementum facilisis leo vel fringilla est ullamcorper. 
-  Libero id faucibus nisl tincidunt eget nullam non. Suspendisse interdum consectetur libero id faucibus nisl. 
-  Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. 
-  Vitae purus faucibus ornare suspendisse sed nisi lacus. Dui ut ornare lectus sit amet est placerat in egestas. 
-  Interdum velit laoreet id donec ultrices tincidunt arcu non sodales.
+  st.write("""
+  There are various ways to reduce global warming - we can replace high-emitting fuels such as coal, oil and gas with more climate-friendly 
+  alternatives like solar power, wind power, or nuclear power. We can also work on making our buildings, technology and infrastructure more 
+  energy-efficient, both in production and in usage. 
+
+  Another approach is to try to remove CO2 that is already in the atmosphere, for example by reforesting the earth – tropical forests once 
+  covered 12% of the earth’s landmass, now they only cover 5% -, by changing farming practices to store more carbon in the soil or through 
+  direct air capture technology. However, it is unlikely that these methods will be able to remove carbon dioxide faster than it is currently 
+  being produced. 
   """)
   st.markdown("**As Companies**")
-  st.text("""
-  Ullamcorper velit sed ullamcorper morbi. Elementum facilisis leo vel fringilla est ullamcorper. 
-  Libero id faucibus nisl tincidunt eget nullam non. Suspendisse interdum consectetur libero id faucibus nisl. 
-  Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. 
-  Vitae purus faucibus ornare suspendisse sed nisi lacus. Dui ut ornare lectus sit amet est placerat in egestas. 
-  Interdum velit laoreet id donec ultrices tincidunt arcu non sodales.
+  st.write("""
+  Similarly, companies can impact climate change by reducing the emissions produced by their operations through various measures, such as 
+  minimizing transport distances and using carbon-neutral energy sources. 
   """)
   st.markdown("**As Societies**")
-  st.text("""
-  Ullamcorper velit sed ullamcorper morbi. Elementum facilisis leo vel fringilla est ullamcorper. 
-  Libero id faucibus nisl tincidunt eget nullam non. Suspendisse interdum consectetur libero id faucibus nisl. 
-  Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. 
-  Vitae purus faucibus ornare suspendisse sed nisi lacus. Dui ut ornare lectus sit amet est placerat in egestas. 
-  Interdum velit laoreet id donec ultrices tincidunt arcu non sodales.
+  st.write("""
+  A promising method to curb climate change on a societal level involves encouraging individuals and companies to reduce their own 
+  emissions by introducing carbon taxes – by placing a tax or fee on the use of fossil fuels, production and consumption choices leading to 
+  higher emissions become more expensive, raising the incentive to switch to more climate-friendly alternatives. 
   """)
 
   
