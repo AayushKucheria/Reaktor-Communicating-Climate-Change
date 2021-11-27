@@ -34,7 +34,7 @@ page = st.sidebar.radio("Pages", ("Home", "About"))
 
 # Write some text
 if page == "Home":
-  st.header("The Climate Crisis. Tick Tock.")
+  st.header("The Climate Crisis.")
   st.write("""
 Climate change, mainly due to carbon dioxide (CO2) and methane emissions, is one of the largest challenges that humanity is currently facing. 
 As population and consumption will continue to increase in the future, so will emissions. Meaning the challenge is far from over and will 
@@ -112,7 +112,8 @@ cope with both the effects of climate change and the switch to clean energy.
   The most problmatic of the greenhouse gases is carbon dioxide (CO2) which is emmited in enormous quantities mainly when burning fossil fuels.
   The other main contributor to global warming is methane (CH4) which is emitted in far smaller amounts, but is much more potent and therefore 
   accounts for roughly 1/3 of the temperature increase due to the greenhouse effect.
-  To give a sense of the rate at which CO2 and methane have been emitted, the plot below shows the historical yearly emissions for the whole world.
+  To give a sense of the rate at which CO2 and methane have been emitted, the plot below shows the historical yearly emissions for a chosen region.
+  It also shows a 5-year prediction of the futue emissions.
   """)
 
   # Plot of the CO2 and methane emissions for the entire world
@@ -130,8 +131,13 @@ cope with both the effects of climate change and the switch to clean energy.
     st.plotly_chart(fig)
 
 
-  st.write("""It's clear that CO2 emissions have been increasing for many years. 
-  To get a closer look at which countries contribute most to CO2 emissions take a look at the map below.""")
+  st.write("""It's clear that CO2 emissions have been increasing for many years, 
+  however, in some regions such as Finland and Europe the emissions have started decreasing in the 21st century. 
+
+  Next we will focus on the CO2 emissions as they contribute more to the global warming effect and carbon dioxide stays in the atmosphere much longer than methane.
+  To get a closer look at which countries contribute most to CO2 emissions take a look at the map below.
+  Select the year and metric you are interested in. You can easily distinguish the biggest poluters and see how your country compares.
+  """)
 
 
 
@@ -170,8 +176,12 @@ cope with both the effects of climate change and the switch to clean energy.
 
 
 
-  st.write("""Below is another way to visualize how the emissions have been changing in each country. 
-  This plot is particularly useful for finding the outliers.""")
+  st.write("""The next plot is great for checking how namy countries have managed to decrease their emissions in some year.
+  Each spot represents a country and you can easily spot the outliers. 
+  Keep in mind that the y-axis scale is logarithmic so the top 3-5 countries produce orders of magnitude more emissions than
+  most other countries. They have a large impact on the overall trend.
+  The color of the points shows how wealthy a country is using GDP per capita.
+  Perhaps the wealthier countries have more money to invest into clean energy sources?""")
 
   # Scatter plot of changes in CO2 emissions
 
@@ -206,13 +216,10 @@ cope with both the effects of climate change and the switch to clean energy.
 
 
   st.write("""
-  Dictumst quisque sagittis purus sit amet volutpat. Consequat interdum varius sit amet mattis vulputate enim nulla. 
-  Nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque. Sit amet purus gravida quis blandit. 
-  Sit amet consectetur adipiscing elit pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim. 
-  Dolor sit amet consectetur adipiscing. Nec feugiat in fermentum posuere. Eu ultrices vitae auctor eu augue ut lectus arcu. 
-  Aenean euismod elementum nisi quis eleifend. In mollis nunc sed id semper risus in hendrerit gravida. 
-  Massa tincidunt dui ut ornare lectus sit amet est placerat. Cursus mattis molestie a iaculis at erat pellentesque. Eget nullam non nisi est.
-  """)
+    As you can see the situation can be quite different from country to country. 
+    But a question might arise: What are the main sources of these emissions? 
+    The following section will show you how much different sectors of the economy contribute to the problem.
+     """)
 
   template_image = "./res/template_image.png"
   # Bold text

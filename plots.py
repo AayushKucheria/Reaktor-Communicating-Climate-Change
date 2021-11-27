@@ -92,7 +92,7 @@ def changes_plot(df, year, rangeX):
 def model_future_CO2_emissions(country, predict_time, train_from):
   df = get_OWID_data()
   fi = df[df.country == country]
-  fi = fi[["country", "year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
+  fi = fi[["country", "year", "co2", "population", "energy_per_capita"]]
   fi = fi[df.year > train_from]
   available_data_year = fi[~ fi.isnull().any(axis = 1)].year.max()
   years_cut_off = fi.year.max() - available_data_year
@@ -105,8 +105,8 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   test = fi[fi.year >= predict_from - shift_by].copy()
 
   y_train = training.co2_now
-  X_train = training[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
-  X_test = test[["year", "co2", "co2_growth_prct", "population", "energy_per_capita"]]
+  X_train = training[["year", "population", "energy_per_capita"]]
+  X_test = test[["year", "population", "energy_per_capita"]]
 
   model = smapi.OLS(y_train,X_train)
   results = model.fit()
@@ -137,8 +137,8 @@ def model_future_methane_emissions(country, predict_time, train_from):
   test = fi[fi.year >= predict_from - shift_by].copy()
 
   y_train = training.methane_now
-  X_train = training[["year", "co2", "methane", "population"]]
-  X_test = test[["year", "co2", "methane", "population"]]
+  X_train = training[["year", "methane", "population"]]
+  X_test = test[["year", "methane", "population"]]
 
   model = smapi.OLS(y_train,X_train)
   results = model.fit()
