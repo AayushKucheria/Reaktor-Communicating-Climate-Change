@@ -25,6 +25,7 @@ from plots import heatmap, changes_plot, model_future_CO2_emissions, model_futur
 # Setting page config
 st.set_page_config(page_title="Climate Change: A Nordic Perspective", page_icon="🌍", layout="wide")
 
+df = get_OWID_data()
 # Create a header aligning the text to the center in streamlit
 # Create a sidebar with 3 pages
 st.sidebar.header("Menu")
@@ -47,11 +48,11 @@ if page == "Home":
   """)
 
   st.markdown("""
-  - [The temperature is rising](http://localhost:8501/#the-temperature-is-rising)
-  - [Here's why it matters](http://localhost:8501/#heres-why-it-matters)
-  - [Emissions worldwide have been growing](http://localhost:8501/#emissions-worldwide-have-been-growing)
-  - [But, which sectors actually contribute to this?](http://localhost:8501/#but-which-sectors-actually-contribute-to-this)
-  - [What can we do about this?](http://localhost:8501/#what-can-we-do-about-this)
+  - [The temperature is rising](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#the-temperature-is-rising)
+  - [Here's why it matters](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#heres-why-it-matters)
+  - [Emissions worldwide have been growing](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#emissions-worldwide-have-been-growing)
+  - [But, which sectors actually contribute to this?](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#but-which-sectors-actually-contribute-to-this)
+  - [What can we do about this?](https://share.streamlit.io/aayushkucheria/reaktor-communicating-climate-change/main/world_map.py/#what-can-we-do-about-this)
   """)
 
   st.subheader("The temperature is rising")
@@ -180,12 +181,11 @@ if page == "Home":
   plot_ph.plotly_chart(fig)
   
   if animate:
-      for x in range(year_scatter, end_year, 1):
-          time.sleep(.5)
-
-          year_scatter = slider_ph.slider("Year", start_year, end_year, year_scatter + 1, 1, key = str(year_scatter) + "animation")
-          fig = changes_plot(df, year_scatter, rangeX = [-100, 100])
-          plot_ph.plotly_chart(fig)
+    for x in range(year_scatter, end_year, 1):
+      time.sleep(.5)
+      year_scatter = slider_ph.slider("Year", start_year, end_year, year_scatter + 1, 1, key = str(year_scatter) + "animation")
+      fig = changes_plot(df, year_scatter, rangeX = [-100, 100])
+      plot_ph.plotly_chart(fig)
 
 
 
@@ -257,8 +257,8 @@ if page == "Home":
 elif page == "About":
   st.title("About")
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  This project was done as part of the course "Data Science Project" at Aalto University, in collaboration with Reaktor.
+  The project was done in the fall of 2021, by Verna, Mikolaj, Hanne, Aayush, My, and Khue.
   """)
 
 
