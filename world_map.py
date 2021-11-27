@@ -313,15 +313,25 @@ page = st.sidebar.radio("Pages", ("Home", "About"))
 if page == "Home":
   st.header("The Climate Crisis. Tick Tock.")
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Tortor dignissim convallis aenean et tortor at risus viverra. Risus nullam eget felis eget nunc lobortis mattis. 
-  Integer malesuada nunc vel risus commodo. Lacus viverra vitae congue eu consequat ac felis donec et. 
-  Sagittis nisl rhoncus mattis rhoncus urna neque viverra justo nec. Urna et pharetra pharetra massa. 
-  Tellus in metus vulputate eu scelerisque. Aenean euismod elementum nisi quis eleifend quam. 
-  Tristique senectus et netus et malesuada fames ac. Quis eleifend quam adipiscing vitae proin sagittis nisl rhoncus mattis. 
-  Dictum fusce ut placerat orci nulla pellentesque. Vulputate enim nulla aliquet porttitor lacus luctus. Eu volutpat odio facilisis mauris sit amet. 
-  Cursus sit amet dictum sit amet justo donec. 
-  Tempus iaculis urna id volutpat lacus. Ornare massa eget egestas purus viverra accumsan in nisl. Donec et odio pellentesque diam volutpat.
+Climate change, mainly due to carbon dioxide (CO2) and methane emissions, is one of the largest challenges that humanity is currently facing. 
+As population and consumption will continue to increase in the future, so will emissions. Meaning the challenge is far from over and will 
+likely get worse before getting better. 
+
+If not addressed and limited, climate change will cause widespread social, economic and ecosystem damage. 
+As greenhouse gas emissions are distributed globally and over a wide range of societal activities, it needs to be addressed from a 
+global point of view. 
+
+The political goal of limiting global warming caused by emissions to 1,5 degrees has risen. It has been assessed that this would require a 
+general global carbon neutrality by 2050 and negative emission soon after that. 
+ 
+While that goal is still far from achieved there is an increasing momentum of decreasing emissions. Europe as an example has been able to 
+cut its total emissions almost yearly since the 1990s. In addition, several countries both within and outside of Europe have pledged 
+carbon neutrality with varying target years. 
+ 
+In the Glasgow climate conference in November of 2021 a new global agreement, the Glasgow Climate Pact, was reached. In the agreement the 
+countries pledged to cut the emission of CO2 to limit temperature rise to 1.5 degrees. On a better note, for the first time, there was an 
+explicit plan to reduce the use of coal by phasing it down. The pact pledged to increase financial aid to developing countries to help them 
+cope with both the effects of climate change and the switch to clean energy. 
   """)
 
   st.markdown("""
@@ -336,14 +346,18 @@ if page == "Home":
   # Figure of worldwide mean temperature over time
   st.plotly_chart(world_temperature())
   st.write("""
-  Human-induced global warming reached about 1°C (likely between 0.8 and 1.2°C) above pre-indstrial levels in 2017, with a 0.2°C increase per decade.
+  Human-induced global warming reached about 1°C (likely between 0.8 and 1.2°C) above pre-industrial levels in 2017, with a 0.2°C increase per decade. 
   Most land regions are warming up faster than the global average - depending on the considered temperature dataset, 20-40% of the world population 
-  live in regions that had already experienced warming of more than 1.5°C in at least one season by the decade 2006-2015.
+  live in regions that had already experienced warming of more than 1.5°C in at least one season by the decade 2006-2015. 
 
-  The straight lines in the figure above represent a 1°C and 1.5°C increase from pre-industrial levels, respectively. 
-  Global warming is defined in the IPCC report as an increase
-  in combined surface air and sea surface temperatures averaged over the globe and a 30-year period, usually relative to the period 1850-1900.
-  By that measure, warming from pre-industrial levels to the decade 2006-2015 is assessed to be approximately 0.87°C.
+  Global warming is defined in the IPCC (Intergovernmental Panel on Climate Change) report as an increase in combined surface air and 
+  sea surface temperatures averaged over the globe and a 30-year period, usually relative to the period 1850-1900. By that measure, warming 
+  from pre-industrial levels to the decade 2006-2015 is assessed to be approximately 0.87°C.  
+  
+  The red line in the figure above shows the global temperature over the previous 30 years while the straight lines represent a 1 °C and 1.5 °C 
+  increase from pre-industrial levels. Note that the figure is merely an approximation for the sake of visualization: in practice, there is no 
+  exact pre-industrial temperature to work with - even the methods of calculating it differ greatly - and therefore also no exact temperature we 
+  could label as 1.5 °C increase.
   """)
 
   st.subheader("Here's why it matters")
@@ -492,12 +506,18 @@ if page == "Home":
   # Solutions, not just sources
   st.subheader("But, which sectors actually contribute to this?")
   st.markdown("**TODO:** Verna's visualizations will go here.")
-  st.text("""
-  Ullamcorper velit sed ullamcorper morbi. Elementum facilisis leo vel fringilla est ullamcorper. 
-  Libero id faucibus nisl tincidunt eget nullam non. Suspendisse interdum consectetur libero id faucibus nisl. 
-  Nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. 
-  Vitae purus faucibus ornare suspendisse sed nisi lacus. Dui ut ornare lectus sit amet est placerat in egestas. 
-  Interdum velit laoreet id donec ultrices tincidunt arcu non sodales.
+  st.write("""
+  Global emissions can be grouped according to their source sectors. One way to do this is the following where 4 different sources are 
+  identified and those then broken into further sub-sectors and sub-sub-sectors. These four sectors are from the largest to the smallest: 
+  Energy related emission, agriculture, forestry, and land use related emissions, industrial process related emissions and waste related emissions.  
+
+  As mentioned of these sectors, energy is with 73,2% the largest source of emissions. 54% of energy related emissions come from energy in industry, 
+  22,1% from transportation, and 23,9% from energy usage in buildings both commercial and residential. Transportation related emissions are mainly 
+  from roads. This is visible in the figure above as the circles are relative to the proportion of total emissions. 
+
+  The remaining 26,8% of the emissions are as following: 18,4% of emissions come from agriculture, forestry & land use which mainly consists 
+  of livestock, manure, rice cultivation, agricultural soils, and crop related emissions. Industrial processes, cement and chemical & petrochemical, 
+  account for 5,2% of the emissions and waste, wastewater, and landfills, for 3,2%. 
   """)
   st.image("template_image.png", width=500)
 
@@ -534,8 +554,12 @@ if page == "Home":
 elif page == "About":
   st.title("About")
   st.write("""
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  This website was created as part of the Data Science Project course at Aalto University.
+
+  The goal of the project was to find ways to communicate climate change in a clear and impactful way with an interactive web page.  
+
+  The focus was especially on capturing the emission reduction momentum by visualizing greenhouse emissions, in particular CO2, and the 
+  explanatory phenomena by first exploring the past and then into the future. 
   """)
 
 
