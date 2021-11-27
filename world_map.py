@@ -12,7 +12,7 @@ import statsmodels as sm
 import plotly.graph_objs as go
 
 from util import load_data, get_OWID_data, max_year
-from plots import heatmap, changes_plot, model_future_CO2_emissions, model_future_methane_emissions, emissions_history_plot, world_temperature
+from plots import heatmap, changes_plot, emissions_history_plot, world_temperature, sector_breakdown
 
 
 
@@ -218,7 +218,6 @@ cope with both the effects of climate change and the switch to clean energy.
   template_image = "./res/template_image.png"
   # Bold text
   st.markdown("**Expand on Sub-saharan africa, latin america, etc**")
-  st.text("VIZ TODO")
   # Add template_image
   st.image(template_image, width=500)
   st.text("""
@@ -231,7 +230,7 @@ cope with both the effects of climate change and the switch to clean energy.
 
   # Solutions, not just sources
   st.subheader("But, which sectors actually contribute to this?")
-  st.markdown("**TODO:** Verna's visualizations will go here.")
+  st.write(sector_breakdown())
   st.write("""
   Global emissions can be grouped according to their source sectors. One way to do this is the following where 4 different sources are 
   identified and those then broken into further sub-sectors and sub-sub-sectors. These four sectors are from the largest to the smallest: 
@@ -294,18 +293,18 @@ elif page == "About":
   Contributors: Verna, Hanne, Mikolaj, Aayush, Khue, My.
   """)
 
-st.subheader("Credits")
+  st.subheader("Credits")
 
-st.markdown("""
+  st.markdown("""
 
-  This data has been collected, aggregated, and documented by Our World in Data into a co2-dataset publicly available on [github](This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser, Edouard Mathieu and Bobbie Macdonald.
+    This data has been collected, aggregated, and documented by Our World in Data into a co2-dataset publicly available on [github](This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser, Edouard Mathieu and Bobbie Macdonald.
 
-  More specifically, Our World in Data has collected the data from the following sources:
-- CO2 emissions: this data is sourced from the Global Carbon Project. The Global Carbon Project typically releases a new update of CO2 emissions annually.
-- Greenhouse gas emissions (including methane, and nitrous oxide): this data is sourced from the CAIT Climate Data Explorer, and downloaded from the Climate Watch Portal.
-- Energy (primary energy, energy mix and energy intensity): this data is sourced from a combination of two sources. The BP Statistical Review of World Energy is published annually, but it does not provide data on primary energy consumption for all countries. For countries absent from this dataset, we calculate primary energy by multiplying the World Bank, World Development Indicators metric Energy use per capita by total population figures. The World Bank sources this metric from the IEA.
-- Other variables: this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.).
-""")
+    More specifically, Our World in Data has collected the data from the following sources:
+  - CO2 emissions: this data is sourced from the Global Carbon Project. The Global Carbon Project typically releases a new update of CO2 emissions annually.
+  - Greenhouse gas emissions (including methane, and nitrous oxide): this data is sourced from the CAIT Climate Data Explorer, and downloaded from the Climate Watch Portal.
+  - Energy (primary energy, energy mix and energy intensity): this data is sourced from a combination of two sources. The BP Statistical Review of World Energy is published annually, but it does not provide data on primary energy consumption for all countries. For countries absent from this dataset, we calculate primary energy by multiplying the World Bank, World Development Indicators metric Energy use per capita by total population figures. The World Bank sources this metric from the IEA.
+  - Other variables: this data is collected from a variety of sources (United Nations, World Bank, Gapminder, Maddison Project Database, etc.).
+  """)
 
 
 

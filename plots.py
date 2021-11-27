@@ -10,6 +10,7 @@ from folium.plugins import Fullscreen
 import statsmodels.api as smapi
 import statsmodels as sm
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 
 from util import get_OWID_data
 
@@ -219,6 +220,38 @@ def emissions_history_plot(country, from_year):
 
   return(fig)
 
+### Sector breakdown pie chart
+@st.cache()
+def sector_breakdown():
+  xls = pd.ExcelFile('./res/Global-GHG-Emissions-by-sector-based-on-WRI-2020.xlsx')
+  df_all = pd.read_excel(xls, 'All')
+  df_all = df_all.rename(columns={'Sub-sector (further breakdown)': 'Sub-sub-sector'})
+
+
+  energy = df_all[df_all["Sector"] == "Energy"]
+  industrial = df_all[df_all["Sector"] == "Industrial processes"]
+  waste = df_all[df_all["Sector"] == "Waste"]
+  AFOLU = df_all[df_all["Sector"] == "Agriculture, Forestry & Land Use (AFOLU)"]
+
+  # Create subplots: use 'domain' type for Pie subplot
+  fig = make_subplots(rows=1, cols=4, specs=[[{'type':'domain'}, {'type':'domain'}, {'type':'domain'}, {'type':'domain'}]], subplot_titles=['Energy',"Agriculture, Forestry & Land", 'Industrial processes', "Waste" ])
+
+  fig.add_trace(go.Pie(labels=energy["Sub-sector"], values=energy["Share of global greenhouse gas emissions (%)"], scalegroup='one', name="Emissions from Energy"),
+                1, 1)
+  fig.add_trace(go.Pie(labels=AFOLU["Sub-sub-sector"], values=AFOLU["Share of global greenhouse gas emissions (%)"], scalegroup='one', name="Emissions from AFOLU"),
+                1, 2)
+  fig.add_trace(go.Pie(labels=industrial["Sub-sub-sector"], values=industrial["Share of global greenhouse gas emissions (%)"],scalegroup='one', name="Emissions from Industrial processes"),
+                1, 3)
+  fig.add_trace(go.Pie(labels=waste["Sub-sub-sector"], values=waste["Share of global greenhouse gas emissions (%)"], scalegroup='one', name="Emissions from Waste"),
+                1, 4)
+
+  fig.update_traces(hoverinfo='label+percent', textinfo='none')
+  fig.update_layout(
+      title_text="Global Emissions by Sectors",
+      showlegend=False,
+      width=900, height=500)
+      
+  return fig
 #### WORLD TEMPERATURE
 @st.cache()
 def world_temperature():
@@ -234,6 +267,8 @@ def world_temperature():
       y = ["Temperature", "30 year average", "1 degree increase", "1.5 degree increase"],
       title = "Global mean temperature history",
       range_y = (-0.8, 1.8),
+      width = 900,
+      height = 500
   )
   # fig.add_hline(y = preindustrialTemp + 1, line_color = "orange")
   # fig.add_hline(y = preindustrialTemp + 1.5, line_color = "red")
