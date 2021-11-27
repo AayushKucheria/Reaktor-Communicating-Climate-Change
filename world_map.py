@@ -286,7 +286,7 @@ elif page == "About":
 
   st.markdown("""
 
-    This data has been collected, aggregated, and documented by Our World in Data into a co2-dataset publicly available on [github](This data has been collected, aggregated, and documented by Hannah Ritchie, Max Roser, Edouard Mathieu and Bobbie Macdonald.
+    This data has been collected, aggregated, and documented by Our World in Data into a co2-dataset publicly available on [github](https://github.com/owid/co2-data).
 
     More specifically, Our World in Data has collected the data from the following sources:
   - CO2 emissions: this data is sourced from the Global Carbon Project. The Global Carbon Project typically releases a new update of CO2 emissions annually.
