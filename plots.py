@@ -150,8 +150,8 @@ def model_future_methane_emissions(country, predict_time, train_from):
   test = fi[fi.year >= predict_from - shift_by].copy()
 
   y_train = training.methane_now
-  X_train = training[["year", "methane", "population"]]
-  X_test = test[["year", "methane", "population"]]
+  X_train = training[["population"]]
+  X_test = test[["population"]]
 
   model = smapi.OLS(y_train,X_train)
   results = model.fit()
