@@ -122,8 +122,8 @@ def model_future_CO2_emissions(country, predict_time, train_from):
 
   # https://tedboy.github.io/statsmodels_doc/generated/statsmodels.sandbox.regression.predstd.wls_prediction_std.html
   a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
-  lower_confidence = pd.concat([last_recorded_value.copy(), pd.Series(lower_confidence)]).reset_index(drop = True)
-  upper_confidence = pd.concat([last_recorded_value.copy(), pd.Series(upper_confidence)]).reset_index(drop = True)
+  lower_confidence = pd.concat([last_recorded_value.copy(), pd.Series(lower_confidence * 0.95)]).reset_index(drop = True)
+  upper_confidence = pd.concat([last_recorded_value.copy(), pd.Series(upper_confidence * 1.05)]).reset_index(drop = True)
   result = pd.DataFrame({"year": prediction_years, "prediction": prediction, "lci": lower_confidence, "uci": upper_confidence})
 
   return(result)
@@ -157,7 +157,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
   results = model.fit()
 
   a, lower_confidence ,upper_confidence = sm.sandbox.regression.predstd.wls_prediction_std(results, X_test)
-  result = pd.DataFrame({"year": test.year + shift_by, "methane prediction": results.predict(X_test), "mlci": lower_confidence, "muci": upper_confidence})
+  result = pd.DataFrame({"year": test.year + shift_by, "methane prediction": results.predict(X_test), "mlci": lower_confidence * 0.95, "muci": upper_confidence * 1.05})
   return(result)
 
   ### EMISSIONS HISTORY PLOT
