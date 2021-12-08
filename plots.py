@@ -100,7 +100,7 @@ def model_future_CO2_emissions(country, predict_time, train_from):
   years_cut_off = available_co2_data_year - available_data_year
   shift_by = predict_time + years_cut_off
   fi["co2_now"] = fi["co2"].shift(-shift_by) # All other variables are from the past
-  fi = fi[df.year <= available_data_year - years_cut_off]
+  fi = fi[df.year <= available_data_year]
   predict_from = available_co2_data_year + 1
 
   training = fi[fi.year < predict_from - shift_by].copy()
@@ -143,7 +143,7 @@ def model_future_methane_emissions(country, predict_time, train_from):
   years_cut_off = available_methane_data_year - available_data_year
   shift_by = predict_time + years_cut_off
   fi["methane_now"] = fi["methane"].shift(-shift_by) # All other variables are from the past
-  fi = fi[df.year <= available_data_year - years_cut_off]
+  fi = fi[df.year <= available_data_year]
   predict_from = available_methane_data_year + 1  
 
   training = fi[fi.year < predict_from - shift_by].copy()
